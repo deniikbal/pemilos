@@ -1,0 +1,199 @@
+import { supabase } from '../lib/supabase';
+import type { Candidate, Voter, DashboardStats, Vote } from '../types';
+
+export const getDashboardStats = async (): Promise<DashboardStats> => {
+  // Get total voters
+  const { count: total_voters } = await supabase
+    .from('voters')
+    .select('*', { count: 'exact', head: true });
+
+  // Get voted count
+  const { count: voted_count } = await supabase
+    .from('voters')
+    .select('*', { count: 'exact', head: true })
+    .eq('has_voted', true);
+
+  // Get candidates count
+  const { count: candidates_count } = await supabase
+    .from('candidates')
+    .select('*', { count: 'exact', head: true });
+
+  // Get vote results
+  const { data: voteResults } = await supabase
+    .from('votes')
+    .select(`
+      candidate_id,
+      candidates!inner(nama)
+    `);
+
+  // Count votes per candidate
+  const voteCounts: Record<string, { name: string; count: number }> = {};
+  
+  voteResults?.forEach(vote => {
+    const candidateId = vote.candidate_id;
+    const candidateName = vote.candidates.nama;
+    
+    if (!voteCounts[candidateId]) {
+      voteCounts[candidateId] = { name: candidateName, count: 0 };
+    }
+    voteCounts[candidateId].count++;
+  });
+
+  const vote_results = Object.entries(voteCounts).map(([candidate_id, data]) => ({
+    candidate_id,
+    candidate_name: data.name,
+    vote_count: data.count
+  }));
+
+  return {
+    total_voters: total_voters || 0,
+    voted_count: voted_count || 0,
+    not_voted_count: (total_voters || 0) - (voted_count || 0),
+    candidates_count: candidates_count || 0,
+    vote_results
+  };
+};
+
+export const getCandidates = async (): Promise<Candidate[]> => {
+  const { data, error } = await supabase
+    .from('candidates')
+    .select('*')
+    .order('created_at', { ascending: true });
+
+  if (error) throw error;
+  return data || [];
+};
+
+export const createCandidate = async (candidate: Omit<Candidate, 'id' | 'created_at'>): Promise<Candidate> => {
+  const { data, error } = await supabase
+    .from('candidates')
+    .insert([candidate])
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const updateCandidate = async (id: string, candidate: Partial<Candidate>): Promise<Candidate> => {
+  const { data, error } = await supabase
+    .from('candidates')
+    .update(candidate)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const deleteCandidate = async (id: string): Promise<void> => {
+  const { error } = await supabase
+    .from('candidates')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
+};
+
+export const getVoters = async (): Promise<Voter[]> => {
+  const { data, error } = await supabase
+    .from('voters')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return data || [];
+};
+
+export const createVoter = async (voter: Omit<Voter, 'id' | 'created_at' | 'has_voted'>): Promise<Voter> => {
+  const { data, error } = await supabase
+    .from('voters')
+    .insert([{ ...voter, password_hash: voter.nisn }]) // Use NISN as default password
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const updateVoter = async (id: string, voter: Partial<Voter>): Promise<Voter> => {
+  const { data, error } = await supabase
+    .from('voters')
+    .update(voter)
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+};
+
+export const deleteVoter = async (id: string): Promise<void> => {
+  const { error } = await supabase
+    .from('voters')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
+};
+
+export const submitVote = async (voterId: string, candidateId: string): Promise<void> => {
+  // Check if voter already voted
+  const { data: existingVote } = await supabase
+    .from('votes')
+    .select('id')
+    .eq('voter_id', voterId)
+    .single();
+
+  if (existingVote) {
+    throw new Error('Anda sudah melakukan voting');
+  }
+
+  // Insert vote
+  const { error: voteError } = await supabase
+    .from('votes')
+    .insert([{ voter_id: voterId, candidate_id: candidateId }]);
+
+  if (voteError) throw voteError;
+
+  // Update voter has_voted status
+  const { error: updateError } = await supabase
+    .from('voters')
+    .update({ has_voted: true })
+    .eq('id', voterId);
+
+  if (updateError) throw updateError;
+};
+
+export const resetVoting = async (): Promise<void> => {
+  // Delete all votes
+  const { error: deleteVotesError } = await supabase
+    .from('votes')
+    .delete()
+    .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all
+
+  if (deleteVotesError) throw deleteVotesError;
+
+  // Reset all voters has_voted status
+  const { error: updateVotersError } = await supabase
+    .from('voters')
+    .update({ has_voted: false })
+    .neq('id', '00000000-0000-0000-0000-000000000000'); // Update all
+
+  if (updateVotersError) throw updateVotersError;
+};
+
+export const getVotingResults = async (): Promise<Vote[]> => {
+  const { data, error } = await supabase
+    .from('votes')
+    .select(`
+      *,
+      voters(nama, kelas, nisn),
+      candidates(nama)
+    `)
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return data || [];
+};
