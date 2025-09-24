@@ -139,49 +139,80 @@ export const deleteVoter = async (id: string): Promise<void> => {
 };
 
 export const submitVote = async (voterId: string, candidateId: string): Promise<void> => {
-  // Check if voter already voted
-  const { data: existingVote } = await supabase
-    .from('votes')
-    .select('id')
-    .eq('voter_id', voterId)
-    .single();
+  console.log('🗳️ Submitting vote via RPC:', { voterId, candidateId });
 
-  if (existingVote) {
-    throw new Error('Anda sudah melakukan voting');
+  // Use RPC function to handle voting with proper transaction and RLS bypass
+  const { data: result, error } = await supabase
+    .rpc('submit_vote_with_rls', {
+      p_voter_id: voterId,
+      p_candidate_id: candidateId
+    });
+
+  console.log('📋 RPC Response:', { result, error });
+
+  if (error) {
+    console.error('❌ RPC Error:', error);
+    throw new Error('Gagal submit vote: ' + error.message);
   }
 
-  // Insert vote
-  const { error: voteError } = await supabase
-    .from('votes')
-    .insert([{ voter_id: voterId, candidate_id: candidateId }]);
+  if (!result || result.length === 0) {
+    console.error('❌ No result from RPC call');
+    throw new Error('Tidak ada response dari server');
+  }
 
-  if (voteError) throw voteError;
+  const voteResult = result[0];
+  console.log('📊 Vote Result:', voteResult);
 
-  // Update voter has_voted status
-  const { error: updateError } = await supabase
-    .from('voters')
-    .update({ has_voted: true })
-    .eq('id', voterId);
+  if (!voteResult.is_success) {
+    console.error('❌ Vote failed:', voteResult.result_message);
+    throw new Error(voteResult.result_message);
+  }
 
-  if (updateError) throw updateError;
+  console.log('✅ Vote submitted successfully!', {
+    voter: voteResult.voter_name,
+    has_voted: voteResult.new_voted_status,
+    message: voteResult.result_message
+  });
 };
 
-export const resetVoting = async (): Promise<void> => {
-  // Delete all votes
-  const { error: deleteVotesError } = await supabase
-    .from('votes')
-    .delete()
-    .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all
+export const resetVoting = async (): Promise<{ votes_deleted: number; voters_reset: number; message: string }> => {
+  console.log('🔄 Resetting voting via RPC...');
 
-  if (deleteVotesError) throw deleteVotesError;
+  // Use RPC function to handle voting reset with proper transaction and RLS bypass
+  const { data: result, error } = await supabase
+    .rpc('reset_voting_alternative');
 
-  // Reset all voters has_voted status
-  const { error: updateVotersError } = await supabase
-    .from('voters')
-    .update({ has_voted: false })
-    .neq('id', '00000000-0000-0000-0000-000000000000'); // Update all
+  console.log('📋 RPC Response:', { result, error });
 
-  if (updateVotersError) throw updateVotersError;
+  if (error) {
+    console.error('❌ RPC Error:', error);
+    throw new Error('Gagal reset voting: ' + error.message);
+  }
+
+  if (!result || result.length === 0) {
+    console.error('❌ No result from RPC call');
+    throw new Error('Tidak ada response dari server');
+  }
+
+  const resetResult = result[0];
+  console.log('📊 Reset Result:', resetResult);
+
+  if (!resetResult.is_success) {
+    console.error('❌ Reset failed:', resetResult.result_message);
+    throw new Error(resetResult.result_message);
+  }
+
+  console.log('✅ Voting reset successfully!', {
+    votes_deleted: resetResult.votes_deleted,
+    voters_reset: resetResult.voters_reset,
+    message: resetResult.result_message
+  });
+
+  return {
+    votes_deleted: resetResult.votes_deleted,
+    voters_reset: resetResult.voters_reset,
+    message: resetResult.result_message
+  };
 };
 
 export const getVotingResults = async (): Promise<Vote[]> => {
