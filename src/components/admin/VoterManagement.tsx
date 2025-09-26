@@ -387,7 +387,7 @@ const VoterManagement: React.FC = () => {
       <div className="bg-white rounded-xl shadow-md border border-gray-200 p-3 md:p-4">
         <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
           <div className="flex items-center gap-3 w-full sm:w-auto">
-            <div className="w-8 h-8 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
               <Users className="h-4 w-4 text-white" />
             </div>
             <div className="flex-1 min-w-0">
@@ -412,7 +412,7 @@ const VoterManagement: React.FC = () => {
           <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
             <button
               onClick={() => setShowModal(true)}
-              className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all duration-200 shadow-md w-full sm:w-auto"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-md w-full sm:w-auto"
             >
               <div className="flex items-center justify-center gap-2">
                 <Plus className="h-4 w-4" />
@@ -421,7 +421,7 @@ const VoterManagement: React.FC = () => {
             </button>
             <button
               onClick={() => setShowImportModal(true)}
-              className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-200 shadow-md w-full sm:w-auto"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg hover:from-purple-700 hover:to-pink-700 transition-all duration-200 shadow-md w-full sm:w-auto"
             >
               <div className="flex items-center justify-center gap-2">
                 <Upload className="h-4 w-4" />
@@ -437,10 +437,10 @@ const VoterManagement: React.FC = () => {
         {/* Total Voter Card */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 md:p-4 hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between mb-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-green-600 to-emerald-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
               <Users className="h-4 w-4 text-white" />
             </div>
-            <div className="flex items-center gap-1 text-green-600 text-xs">
+            <div className="flex items-center gap-1 text-blue-600 text-xs">
               <TrendingUp className="h-3 w-3" />
               <span>+15%</span>
             </div>
@@ -456,36 +456,36 @@ const VoterManagement: React.FC = () => {
         {/* Voted Count Card */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 md:p-4 hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between mb-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-green-600 to-emerald-600 rounded-lg flex items-center justify-center">
               <CheckCircle className="h-4 w-4 text-white" />
             </div>
-            <div className="flex items-center gap-1 text-blue-600 text-xs">
+            <div className="flex items-center gap-1 text-green-600 text-xs">
               <TrendingUp className="h-3 w-3" />
               <span>+8%</span>
             </div>
           </div>
           <h3 className="text-xs md:text-sm text-gray-600 mb-1">Sudah Memilih</h3>
-          <p className="text-lg md:text-2xl font-bold text-blue-600">{votedCount}</p>
+          <p className="text-lg md:text-2xl font-bold text-green-600">{votedCount}</p>
           <div className="mt-2 h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-blue-600 to-cyan-600 rounded-full" style={{ width: `${participationRate}%` }}></div>
+            <div className="h-full bg-gradient-to-r from-green-600 to-emerald-600 rounded-full" style={{ width: `${participationRate}%` }}></div>
           </div>
         </div>
 
         {/* Not Voted Card */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 md:p-4 hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between mb-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-orange-600 to-amber-600 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
               <XCircle className="h-4 w-4 text-white" />
             </div>
-            <div className="flex items-center gap-1 text-orange-600 text-xs">
+            <div className="flex items-center gap-1 text-purple-600 text-xs">
               <Clock className="h-3 w-3" />
               <span>Menunggu</span>
             </div>
           </div>
           <h3 className="text-xs md:text-sm text-gray-600 mb-1">Belum Memilih</h3>
-          <p className="text-lg md:text-2xl font-bold text-orange-600">{notVotedCount}</p>
+          <p className="text-lg md:text-2xl font-bold text-purple-600">{notVotedCount}</p>
           <div className="mt-2 h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-orange-600 to-amber-600 rounded-full" style={{ width: `${100 - participationRate}%` }}></div>
+            <div className="h-full bg-gradient-to-r from-purple-600 to-pink-600 rounded-full" style={{ width: `${100 - participationRate}%` }}></div>
           </div>
         </div>
       </div>
@@ -493,10 +493,10 @@ const VoterManagement: React.FC = () => {
       {/* Voters Table */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         {/* Table Header */}
-        <div className="bg-gradient-to-r from-green-50 to-emerald-50 px-4 py-3 border-b border-green-100">
+        <div className="bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-3 border-b border-blue-100">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                 <Shield className="h-4 w-4 text-white" />
               </div>
               <div>
@@ -519,7 +519,7 @@ const VoterManagement: React.FC = () => {
                       setSearchTerm(e.target.value);
                       setCurrentPage(1); // Reset ke halaman pertama saat search
                     }}
-                    className="pl-10 pr-4 py-2.5 md:py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent w-full"
+                    className="pl-10 pr-4 py-2.5 md:py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full"
                   />
                 </div>
 
@@ -532,7 +532,7 @@ const VoterManagement: React.FC = () => {
                       setStatusFilter(e.target.value as 'all' | 'voted' | 'not_voted');
                       setCurrentPage(1); // Reset ke halaman pertama saat filter berubah
                     }}
-                    className="px-3 py-2.5 md:py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    className="px-3 py-2.5 md:py-2 bg-white border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
                     <option value="all">Semua Status</option>
                     <option value="voted">Sudah Memilih</option>
@@ -546,7 +546,7 @@ const VoterManagement: React.FC = () => {
                 <button
                   onClick={printVotingCards}
                   disabled={filteredVoters.length === 0}
-                  className="flex items-center gap-1 bg-green-600 text-white px-3 py-2.5 md:py-2 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-xs md:text-sm justify-center"
+                  className="flex items-center gap-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-3 py-2.5 md:py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors text-xs md:text-sm justify-center"
                   title="Cetak Kartu Pemilihan"
                 >
                   <Printer className="h-3 w-3 md:h-4 md:w-4" />
@@ -569,8 +569,8 @@ const VoterManagement: React.FC = () => {
               <div key={voter.id} className="bg-white border border-gray-200 rounded-lg p-3 hover:shadow-sm transition-shadow">
                 <div className="flex items-start justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                      <span className="text-xs font-bold text-green-600">
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                      <span className="text-xs font-bold text-white">
                         {voter.nisn.slice(0, 2)}
                       </span>
                     </div>
@@ -580,19 +580,19 @@ const VoterManagement: React.FC = () => {
                     </div>
                   </div>
                   {voter.has_voted ? (
-                    <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                       <CheckCircle className="h-3 w-3 mr-1" />
                       Sudah
                     </div>
                   ) : (
-                    <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                    <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                       <XCircle className="h-3 w-3 mr-1" />
                       Belum
                     </div>
                   )}
                 </div>
                 <div className="flex items-center justify-between">
-                  <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                  <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                     {voter.kelas}
                   </div>
                   <div className="flex items-center gap-1">
@@ -618,29 +618,29 @@ const VoterManagement: React.FC = () => {
 
           {/* Desktop Table View */}
           <table className="w-full hidden md:table">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-gradient-to-r from-blue-50 to-purple-50 border-b border-blue-200">
               <tr>
                 <th className="px-2 py-2 md:px-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-green-600 rounded-full"></span>
+                    <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
                     NISN/NIS
                   </div>
                 </th>
                 <th className="px-2 py-2 md:px-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-blue-600 rounded-full"></span>
+                    <span className="w-2 h-2 bg-purple-600 rounded-full"></span>
                     Nama
                   </div>
                 </th>
                 <th className="px-2 py-2 md:px-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-purple-600 rounded-full"></span>
+                    <span className="w-2 h-2 bg-indigo-600 rounded-full"></span>
                     Kelas
                   </div>
                 </th>
                 <th className="px-2 py-2 md:px-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 bg-orange-600 rounded-full"></span>
+                    <span className="w-2 h-2 bg-green-600 rounded-full"></span>
                     Status
                   </div>
                 </th>
@@ -657,8 +657,8 @@ const VoterManagement: React.FC = () => {
                 <tr key={voter.id} className="hover:bg-gray-50/50 transition-colors duration-200">
                   <td className="px-2 py-2 md:px-3 whitespace-nowrap">
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                        <span className="text-xs font-bold text-green-600">
+                      <div className="w-6 h-6 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
+                        <span className="text-xs font-bold text-white">
                           {voter.nisn.slice(0, 2)}
                         </span>
                       </div>
@@ -671,18 +671,18 @@ const VoterManagement: React.FC = () => {
                     <div className="text-sm font-medium text-gray-900">{voter.nama}</div>
                   </td>
                   <td className="px-2 py-2 md:px-3 whitespace-nowrap">
-                    <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                    <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                       {voter.kelas}
                     </div>
                   </td>
                   <td className="px-2 py-2 md:px-3 whitespace-nowrap">
                     {voter.has_voted ? (
-                      <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                         <CheckCircle className="h-3 w-3 mr-1" />
                         Sudah
                       </div>
                     ) : (
-                      <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-800">
+                      <div className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
                         <XCircle className="h-3 w-3 mr-1" />
                         Belum
                       </div>
@@ -714,8 +714,8 @@ const VoterManagement: React.FC = () => {
 
         {filteredVoters.length === 0 && (
           <div className="text-center py-6 md:py-8 px-4">
-            <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-green-100 to-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
-              <Search className="h-6 w-6 md:h-8 md:w-8 text-green-600" />
+            <div className="w-12 h-12 md:w-16 md:h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4">
+              <Search className="h-6 w-6 md:h-8 md:w-8 text-blue-600" />
             </div>
             <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-2">
               {searchTerm ? 'Tidak ditemukan' : 'Belum ada voter'}
@@ -734,7 +734,7 @@ const VoterManagement: React.FC = () => {
               )}
               <button
                 onClick={() => setShowModal(true)}
-                className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all duration-200 shadow-md w-full sm:w-auto"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-md w-full sm:w-auto"
               >
                 <div className="flex items-center justify-center gap-2">
                   <Plus className="h-4 w-4" />
@@ -747,15 +747,15 @@ const VoterManagement: React.FC = () => {
 
         {/* Pagination */}
         {filteredVoters.length > 0 && (
-          <div className="bg-gradient-to-r from-green-50 to-emerald-50 px-4 py-3 border-t border-green-100">
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 px-4 py-3 border-t border-blue-100">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="flex flex-col sm:flex-row items-center gap-3 text-sm text-gray-700">
                 <div className="text-center sm:text-left">
-                  Menampilkan <span className="font-semibold text-green-600">{indexOfFirstItem + 1}</span> -{' '}
-                  <span className="font-semibold text-green-600">
+                  Menampilkan <span className="font-semibold text-blue-600">{indexOfFirstItem + 1}</span> -{' '}
+                  <span className="font-semibold text-blue-600">
                     {Math.min(indexOfLastItem, filteredVoters.length)}
                   </span>{' '}
-                  dari <span className="font-semibold text-green-600">{filteredVoters.length}</span> voter
+                  dari <span className="font-semibold text-blue-600">{filteredVoters.length}</span> voter
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="text-gray-500 text-xs md:text-sm">Tampilkan per halaman:</span>
@@ -763,7 +763,7 @@ const VoterManagement: React.FC = () => {
                     <select
                       value={itemsPerPage}
                       onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
-                      className="appearance-none px-3 py-1 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-sm font-medium text-green-600 cursor-pointer hover:bg-gray-50 transition-colors"
+                      className="appearance-none px-3 py-1 pr-8 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white text-sm font-medium text-blue-600 cursor-pointer hover:bg-gray-50 transition-colors"
                     >
                       <option value={5}>5</option>
                       <option value={10}>10</option>
@@ -771,7 +771,7 @@ const VoterManagement: React.FC = () => {
                       <option value={50}>50</option>
                     </select>
                     <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-                      <ChevronDown className="h-4 w-4 text-green-600" />
+                      <ChevronDown className="h-4 w-4 text-blue-600" />
                     </div>
                   </div>
                 </div>
@@ -802,7 +802,7 @@ const VoterManagement: React.FC = () => {
                         onClick={() => handlePageChange(pageNumber)}
                         className={`w-8 h-8 text-sm font-medium rounded-lg transition-all duration-200 flex-shrink-0 ${
                           currentPage === pageNumber
-                            ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-md hover:shadow-lg transform hover:scale-105'
+                            ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md hover:shadow-lg transform hover:scale-105'
                             : 'border border-gray-300 bg-white hover:bg-gray-50 hover:shadow-sm'
                         }`}
                       >
@@ -830,7 +830,7 @@ const VoterManagement: React.FC = () => {
           <div className="bg-white rounded-xl shadow-xl w-full max-w-md md:max-w-lg max-h-[90vh] overflow-y-auto border border-gray-200">
             <div className="p-4 md:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-r from-green-600 to-emerald-600 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                   <Users className="h-5 w-5 text-white" />
                 </div>
                 <div>
@@ -846,7 +846,7 @@ const VoterManagement: React.FC = () => {
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
-                    <Shield className="h-4 w-4 text-green-600" />
+                    <Shield className="h-4 w-4 text-blue-600" />
                     NISN/NIS
                   </label>
                   <input
@@ -854,14 +854,14 @@ const VoterManagement: React.FC = () => {
                     required
                     value={formData.nisn}
                     onChange={(e) => setFormData(prev => ({ ...prev, nisn: e.target.value }))}
-                    className="w-full px-3 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                    className="w-full px-3 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                     placeholder="Masukkan NISN/NIS"
                   />
                 </div>
 
                 <div>
                   <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
-                    <User className="h-4 w-4 text-green-600" />
+                    <User className="h-4 w-4 text-blue-600" />
                     Nama
                   </label>
                   <input
@@ -869,14 +869,14 @@ const VoterManagement: React.FC = () => {
                     required
                     value={formData.nama}
                     onChange={(e) => setFormData(prev => ({ ...prev, nama: e.target.value }))}
-                    className="w-full px-3 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                    className="w-full px-3 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                     placeholder="Masukkan nama voter"
                   />
                 </div>
 
                 <div>
                   <label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-1">
-                    <MapPin className="h-4 w-4 text-green-600" />
+                    <MapPin className="h-4 w-4 text-blue-600" />
                     Kelas
                   </label>
                   <input
@@ -884,7 +884,7 @@ const VoterManagement: React.FC = () => {
                     required
                     value={formData.kelas}
                     onChange={(e) => setFormData(prev => ({ ...prev, kelas: e.target.value }))}
-                    className="w-full px-3 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-sm"
+                    className="w-full px-3 py-2.5 md:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                     placeholder="XII IPA 1, XI IPS 2"
                   />
                   <p className="text-xs text-gray-500 mt-1">Format: Tingkat Jurusan Kelas</p>
@@ -900,7 +900,7 @@ const VoterManagement: React.FC = () => {
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2.5 md:py-2 bg-gradient-to-r from-green-600 to-emerald-600 text-white rounded-lg hover:from-green-700 hover:to-emerald-700 transition-colors text-sm font-medium w-full sm:w-auto order-1 sm:order-2"
+                    className="px-4 py-2.5 md:py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-colors text-sm font-medium w-full sm:w-auto order-1 sm:order-2"
                   >
                     {editingVoter ? 'Perbarui' : 'Simpan'}
                   </button>
@@ -917,7 +917,7 @@ const VoterManagement: React.FC = () => {
           <div className="bg-white rounded-xl shadow-xl w-full max-w-lg md:max-w-2xl max-h-[90vh] overflow-y-auto border border-gray-200">
             <div className="p-4 md:p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                   <Upload className="h-5 w-5 text-white" />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -930,7 +930,7 @@ const VoterManagement: React.FC = () => {
                 {/* File Upload Section */}
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors">
                   <div className="space-y-3">
-                    <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
+                    <div className="w-12 h-12 bg-gradient-to-r from-blue-100 to-purple-100 rounded-full flex items-center justify-center mx-auto">
                       <Upload className="h-6 w-6 text-blue-600" />
                     </div>
                     <div>
@@ -946,7 +946,7 @@ const VoterManagement: React.FC = () => {
                     />
                     <label
                       htmlFor="file-upload"
-                      className="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors cursor-pointer"
+                      className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition-colors cursor-pointer"
                     >
                       Pilih File
                     </label>
@@ -958,7 +958,7 @@ const VoterManagement: React.FC = () => {
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <div className="w-8 h-8 bg-gradient-to-r from-blue-100 to-purple-100 rounded-lg flex items-center justify-center">
                           <FileText className="h-4 w-4 text-blue-600" />
                         </div>
                         <div>
@@ -1040,7 +1040,7 @@ const VoterManagement: React.FC = () => {
                   <button
                     onClick={handleImport}
                     disabled={!importFile || importing}
-                    className="px-4 py-2.5 md:py-2 bg-gradient-to-r from-blue-600 to-cyan-600 text-white rounded-lg hover:from-blue-700 hover:to-cyan-700 transition-all duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 w-full sm:w-auto order-1 sm:order-2"
+                    className="px-4 py-2.5 md:py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 w-full sm:w-auto order-1 sm:order-2"
                   >
                     {importing ? (
                       <>

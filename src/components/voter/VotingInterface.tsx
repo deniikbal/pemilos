@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
-import { getCandidates, submitVote } from '../../services/api';
+import { getCandidates, submitVote, type VoteResult } from '../../services/api';
 import type { Candidate, Voter } from '../../types';
 import ConfirmVoteModal from './ConfirmVoteModal';
 
@@ -30,7 +30,7 @@ const styles = `
   }
 
   .gradient-text {
-    background: linear-gradient(135deg, #059669, #10b981, #34d399);
+    background: linear-gradient(135deg, #2563eb, #3b82f6, #60a5fa);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -88,18 +88,48 @@ const VotingInterface: React.FC = () => {
   };
 
   const handleConfirmVote = async () => {
-    if (!selectedCandidate || !voter) return;
+    if (!selectedCandidate || !voter) {
+      setShowConfirmModal(false);
+      return;
+    }
 
     try {
       setVoting(true);
-      await submitVote(voter.id, selectedCandidate);
-      setVoted(true);
-      setShowConfirmModal(false);
-      showSuccess('Voting Berhasil!', 'Suara Anda telah berhasil tercatat dalam sistem.');
+      const result: VoteResult = await submitVote(voter.id, selectedCandidate);
+
+      // Handle response dari API
+      if (result.is_success) {
+        // Voting berhasil
+        setVoted(true);
+        setShowConfirmModal(false);
+        showSuccess('Voting Berhasil!', 'Suara Anda telah berhasil tercatat dalam sistem.');
+      } else {
+        // Voting gagal - cek apakah karena sudah voting
+        if (result.result_message?.includes('sudah melakukan voting') ||
+            result.result_message?.includes('already voted') ||
+            result.new_voted_status) {
+          // Jika voter sudah voting, tampilkan halaman sukses
+          setVoted(true);
+          setShowConfirmModal(false);
+        } else {
+          // Error lainnya
+          throw new Error(result.result_message || 'Gagal melakukan voting');
+        }
+      }
     } catch (error: any) {
-      showError('Gagal Submit Vote', error.message || 'Anda sudah melakukan voting sebelumnya.');
-      setVoting(false);
-      setShowConfirmModal(false);
+      console.error('Vote error:', error);
+      const errorMessage = error.message || 'Terjadi kesalahan saat melakukan voting';
+
+      // Cek lagi untuk kasus voter sudah voting (fallback)
+      if (errorMessage.includes('sudah melakukan voting') ||
+          errorMessage.includes('already voted')) {
+        setVoted(true);
+        setShowConfirmModal(false);
+      } else {
+        showError('Gagal Submit Vote', errorMessage);
+        setVoting(false);
+        setShowConfirmModal(false);
+      }
     }
   };
 
@@ -113,13 +143,13 @@ const VotingInterface: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50">
+      <div className="flex items-center justify-center min-h-[60vh] bg-gradient-to-br from-blue-50 via-blue-100 to-indigo-50">
         <div className="text-center">
           <div className="relative mb-6">
-            <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-emerald-600 mx-auto"></div>
-            <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-green-400 mx absolute top-0 left-0"></div>
+            <div className="animate-spin rounded-full h-20 w-20 border-b-2 border-blue-600 mx-auto"></div>
+            <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-blue-400 mx absolute top-0 left-0"></div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <Leaf className="h-8 w-8 text-emerald-600" />
+              <Leaf className="h-8 w-8 text-blue-600" />
             </div>
           </div>
           <h3 className="text-xl font-semibold text-gray-800 mb-2">Memuat Kandidat</h3>
@@ -137,10 +167,10 @@ const VotingInterface: React.FC = () => {
 
   if (voted) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-emerald-100 via-green-100 to-teal-100">
+      <div className="min-h-[80vh] flex items-center justify-center bg-gradient-to-br from-blue-100 via-blue-100 to-indigo-100">
         <div className="text-center max-w-2xl mx-auto p-6 sm:p-8">
           <div className="relative mb-8">
-            <div className="mx-auto w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-emerald-500 to-green-600 rounded-full flex items-center justify-center shadow-2xl">
+            <div className="mx-auto w-24 h-24 sm:w-28 sm:h-28 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-2xl">
               <CheckCircle className="h-12 w-12 sm:h-14 sm:w-14 text-white" />
             </div>
             <div className="absolute -top-2 -right-2">
@@ -160,44 +190,44 @@ const VotingInterface: React.FC = () => {
           </h1>
 
           <p className="text-lg sm:text-xl text-gray-700 mb-8 leading-relaxed">
-            Terima kasih, <span className="font-semibold text-emerald-600">{voter?.nama}</span>!
+            Terima kasih, <span className="font-semibold text-blue-600">{voter?.nama}</span>!
             Suara Anda telah berhasil tercatat dalam sistem pemilihan Ketua OSIS SMAN 1 Bantarujeg.
           </p>
 
-          <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-6 sm:p-8 shadow-2xl border border-emerald-200">
+          <div className="bg-white/90 backdrop-blur-sm rounded-3xl p-6 sm:p-8 shadow-2xl border border-blue-200">
             <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 mb-8">
               <div className="text-center transform hover:scale-105 transition-transform">
-                <div className="w-16 h-16 bg-gradient-to-br from-emerald-100 to-green-100 rounded-full flex items-center justify-center mb-3 shadow-md">
-                  <Calendar className="h-8 w-8 text-emerald-600" />
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-100 rounded-full flex items-center justify-center mb-3 shadow-md">
+                  <Calendar className="h-8 w-8 text-blue-600" />
                 </div>
                 <p className="text-sm text-gray-600 font-medium">Periode Voting</p>
                 <p className="font-bold text-gray-900 text-lg">2024</p>
               </div>
               <div className="text-center transform hover:scale-105 transition-transform">
-                <div className="w-16 h-16 bg-gradient-to-br from-green-100 to-teal-100 rounded-full flex items-center justify-center mb-3 shadow-md">
-                  <Users className="h-8 w-8 text-green-600" />
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mb-3 shadow-md">
+                  <Users className="h-8 w-8 text-blue-600" />
                 </div>
                 <p className="text-sm text-gray-600 font-medium">Peserta</p>
                 <p className="font-bold text-gray-900 text-lg">{candidates.length} Kandidat</p>
               </div>
               <div className="text-center transform hover:scale-105 transition-transform">
-                <div className="w-16 h-16 bg-gradient-to-br from-teal-100 to-emerald-100 rounded-full flex items-center justify-center mb-3 shadow-md">
-                  <Vote className="h-8 w-8 text-teal-600" />
+                <div className="w-16 h-16 bg-gradient-to-br from-indigo-100 to-blue-100 rounded-full flex items-center justify-center mb-3 shadow-md">
+                  <Vote className="h-8 w-8 text-blue-600" />
                 </div>
                 <p className="text-sm text-gray-600 font-medium">Status</p>
-                <p className="font-bold text-emerald-600 text-lg">Selesai</p>
+                <p className="font-bold text-blue-600 text-lg">Selesai</p>
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl p-5 border border-emerald-200 mb-4">
-              <p className="text-sm text-emerald-800">
+            <div className="bg-gradient-to-r from-blue-50 to-blue-50 rounded-xl p-5 border border-blue-200 mb-4">
+              <p className="text-sm text-blue-800">
                 <Shield className="h-5 w-5 inline mr-2" />
                 <strong className="font-semibold">Informasi:</strong> Anda telah menggunakan hak voting Anda. Setiap voter hanya dapat melakukan voting satu kali.
               </p>
             </div>
 
-            <div className="bg-gradient-to-r from-teal-50 to-emerald-50 rounded-xl p-5 border border-teal-200">
-              <p className="text-sm text-teal-800">
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-5 border border-blue-200">
+              <p className="text-sm text-blue-800">
                 <TrendingUp className="h-5 w-5 inline mr-2" />
                 <strong className="font-semibold">Catatan:</strong> Hasil pemilihan akan diumumkan setelah periode voting berakhir.
                 Partisipasi Anda sangat berarti untuk kemajuan OSIS kita!
@@ -221,13 +251,13 @@ const VotingInterface: React.FC = () => {
   }
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-teal-50 font-sans ${selectedCandidate ? 'pb-24 sm:pb-32' : 'pb-4'}`}>
+    <div className={`min-h-screen bg-gradient-to-br from-blue-50 via-blue-100 to-indigo-50 font-sans ${selectedCandidate ? 'pb-24 sm:pb-32' : 'pb-4'}`}>
       {/* Header */}
-      <div className="bg-white/90 backdrop-blur-sm border-b border-emerald-200 px-4 py-6 shadow-sm">
+      <div className="bg-white/90 backdrop-blur-sm border-b border-blue-200 px-4 py-6 shadow-sm">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-6">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-emerald-100 to-green-100 rounded-full mb-4 shadow-md">
-              <Vote className="h-8 w-8 text-emerald-600" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-100 rounded-full mb-4 shadow-md">
+              <Vote className="h-8 w-8 text-blue-600" />
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               <span className="gradient-text">Pemilihan Ketua OSIS</span>
@@ -236,14 +266,14 @@ const VotingInterface: React.FC = () => {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-6 text-sm">
-            <div className="flex items-center gap-2 bg-emerald-50 px-4 py-2 rounded-full">
-              <User className="h-4 w-4 text-emerald-600" />
+            <div className="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full">
+              <User className="h-4 w-4 text-blue-600" />
               <span className="font-medium text-gray-700">{voter?.nama}</span>
-              <span className="text-emerald-400">•</span>
-              <span className="text-emerald-600 font-medium">{voter?.kelas}</span>
+              <span className="text-blue-400">•</span>
+              <span className="text-blue-600 font-medium">{voter?.kelas}</span>
             </div>
-            <div className="flex items-center gap-2 bg-green-50 px-4 py-2 rounded-full">
-              <Users className="h-4 w-4 text-green-600" />
+            <div className="flex items-center gap-2 bg-blue-50 px-4 py-2 rounded-full">
+              <Users className="h-4 w-4 text-blue-600" />
               <span className="font-medium text-gray-700">{candidates.length} Kandidat</span>
             </div>
           </div>
@@ -253,16 +283,16 @@ const VotingInterface: React.FC = () => {
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Quick Info */}
-        <div className="bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 rounded-2xl p-6 mb-8 shadow-lg text-white">
+        <div className="bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-600 rounded-2xl p-6 mb-8 shadow-lg text-white">
           <div className="flex items-start gap-4">
             <div className="flex-shrink-0 mt-1">
               <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                <Shield className="h-6 w-6 text-white" />
+                <Shield className="h-6 w-6 text-blue-100" />
               </div>
             </div>
             <div>
               <h3 className="font-bold text-lg mb-2 tracking-tight">Panduan Voting</h3>
-              <p className="text-emerald-50 text-sm leading-relaxed">
+              <p className="text-blue-100 text-sm leading-relaxed">
                 Pilih satu kandidat dengan bijak. Setiap pemilih hanya memiliki satu kesempatan voting.
                 Suara Anda menentukan masa depan OSIS kita!
               </p>
@@ -274,24 +304,24 @@ const VotingInterface: React.FC = () => {
         <div className="mb-8">
           <div className="flex items-center justify-between mb-8">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 bg-gradient-to-br from-emerald-500 to-green-500 rounded-full flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-full flex items-center justify-center">
                 <Users className="h-4 w-4 text-white" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900">
                 <span className="gradient-text">Kandidat</span>
               </h2>
             </div>
-            <div className="bg-emerald-100 px-4 py-2 rounded-full">
-              <span className="text-sm font-medium text-emerald-700">
+            <div className="bg-blue-100 px-4 py-2 rounded-full">
+              <span className="text-sm font-medium text-blue-700">
                 {selectedCandidate ? '1 kandidat dipilih' : 'Belum ada pilihan'}
               </span>
             </div>
           </div>
 
         {candidates.length === 0 ? (
-          <div className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-2xl border border-emerald-200 shadow-lg">
-            <div className="w-20 h-20 bg-gradient-to-br from-emerald-100 to-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <User className="h-10 w-10 text-emerald-400" />
+          <div className="text-center py-16 bg-white/80 backdrop-blur-sm rounded-2xl border border-blue-200 shadow-lg">
+            <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center mx-auto mb-4">
+              <User className="h-10 w-10 text-blue-400" />
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-2">Belum ada kandidat</h3>
             <p className="text-gray-600">Silakan tunggu admin menambahkan kandidat</p>
@@ -303,15 +333,15 @@ const VotingInterface: React.FC = () => {
                 key={candidate.id}
                 className={`group card-hover bg-white/90 backdrop-blur-sm rounded-2xl border-2 transition-all duration-300 cursor-pointer overflow-hidden ${
                   selectedCandidate === candidate.id
-                    ? 'border-emerald-500 ring-4 ring-emerald-100 shadow-2xl'
-                    : 'border-emerald-200 hover:border-emerald-300 hover:shadow-xl'
+                    ? 'border-blue-500 ring-4 ring-blue-100 shadow-2xl'
+                    : 'border-blue-200 hover:border-blue-300 hover:shadow-xl'
                 }`}
                 onClick={() => setSelectedCandidate(candidate.id)}
                 onMouseEnter={() => setHoveredCandidate(candidate.id)}
                 onMouseLeave={() => setHoveredCandidate(null)}
               >
                 {/* Candidate Image */}
-                <div className="aspect-[4/3] bg-gradient-to-br from-emerald-100 via-green-100 to-teal-100 rounded-t-2xl overflow-hidden relative">
+                <div className="aspect-[4/3] bg-gradient-to-br from-blue-100 via-blue-200 to-indigo-100 rounded-t-2xl overflow-hidden relative">
                   {candidate.foto_url ? (
                     <img
                       src={candidate.foto_url}
@@ -320,12 +350,12 @@ const VotingInterface: React.FC = () => {
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center">
-                      <User className="h-20 w-20 text-emerald-300" />
+                      <User className="h-20 w-20 text-blue-400" />
                     </div>
                   )}
                   <div className="absolute top-3 right-3">
                     <div className="w-8 h-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center">
-                      <span className="text-xs font-bold text-emerald-600">
+                      <span className="text-xs font-bold text-blue-600">
                         #{candidates.indexOf(candidate) + 1}
                       </span>
                     </div>
@@ -333,19 +363,19 @@ const VotingInterface: React.FC = () => {
                 </div>
 
                 {/* Content */}
-                <div className="p-6 bg-gradient-to-b from-white to-emerald-50/30">
+                <div className="p-6 bg-gradient-to-b from-white to-blue-50/30">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <h3 className="text-xl font-bold text-gray-900 mb-2">
                         {candidate.nama}
                       </h3>
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                        <p className="text-sm text-emerald-600 font-medium">Kandidat #{candidates.indexOf(candidate) + 1}</p>
+                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                        <p className="text-sm text-blue-600 font-medium">Kandidat #{candidates.indexOf(candidate) + 1}</p>
                       </div>
                     </div>
                     {selectedCandidate === candidate.id && (
-                      <div className="bg-gradient-to-br from-emerald-500 to-green-500 text-white rounded-full p-2 shadow-lg">
+                      <div className="bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-full p-2 shadow-lg">
                         <CheckCircle className="h-5 w-5" />
                       </div>
                     )}
@@ -353,8 +383,8 @@ const VotingInterface: React.FC = () => {
 
                   <div className="space-y-4 mb-6">
                     <div>
-                      <h4 className="text-sm font-bold text-emerald-700 mb-2 flex items-center gap-2">
-                        <Leaf className="h-4 w-4" />
+                      <h4 className="text-sm font-bold text-blue-700 mb-2 flex items-center gap-2">
+                        <Star className="h-4 w-4" />
                         Visi
                       </h4>
                       <p className="text-sm text-gray-600 line-clamp-2 leading-relaxed">
@@ -362,7 +392,7 @@ const VotingInterface: React.FC = () => {
                       </p>
                     </div>
                     <div>
-                      <h4 className="text-sm font-bold text-emerald-700 mb-2 flex items-center gap-2">
+                      <h4 className="text-sm font-bold text-blue-700 mb-2 flex items-center gap-2">
                         <TrendingUp className="h-4 w-4" />
                         Misi
                       </h4>
@@ -379,8 +409,8 @@ const VotingInterface: React.FC = () => {
                     }}
                     className={`w-full py-3 px-4 rounded-xl text-sm font-bold transition-all duration-200 transform hover:scale-105 ${
                       selectedCandidate === candidate.id
-                        ? 'bg-gradient-to-r from-emerald-500 to-green-500 text-white shadow-lg'
-                        : 'bg-gradient-to-r from-emerald-100 to-green-100 text-emerald-700 hover:from-emerald-200 hover:to-green-200'
+                        ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg'
+                        : 'bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 hover:from-blue-200 hover:to-blue-300'
                     }`}
                   >
                     {selectedCandidate === candidate.id ? (
@@ -406,16 +436,16 @@ const VotingInterface: React.FC = () => {
 
       {/* Bottom Action Bar */}
       {selectedCandidate && (
-        <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 backdrop-blur-sm border-t border-emerald-400 px-4 py-6 z-50 shadow-2xl">
+        <div className="fixed bottom-0 left-0 right-0 bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-600 backdrop-blur-sm border-t border-blue-400 px-4 py-6 z-50 shadow-2xl">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                  <Vote className="h-6 w-6 text-white" />
+                  <Vote className="h-6 w-6 text-blue-100" />
                 </div>
                 <div>
                   <p className="text-sm font-bold text-white tracking-tight">Pilihan Anda</p>
-                  <p className="text-xs text-emerald-100 font-medium">
+                  <p className="text-xs text-blue-100 font-medium">
                     {getSelectedCandidate()?.nama} - #{candidates.findIndex(c => c.id === selectedCandidate) + 1}
                   </p>
                 </div>
@@ -424,11 +454,11 @@ const VotingInterface: React.FC = () => {
               <button
                 onClick={handleVote}
                 disabled={voting}
-                className="bg-white text-emerald-600 px-8 py-3 rounded-xl font-bold text-sm hover:bg-emerald-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 flex items-center gap-2 shadow-lg"
+                className="bg-white text-blue-600 px-8 py-3 rounded-xl font-bold text-sm hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 flex items-center gap-2 shadow-lg"
               >
                 {voting ? (
                   <>
-                    <div className="animate-spin h-4 w-4 border-2 border-emerald-600 border-t-transparent rounded-full"></div>
+                    <div className="animate-spin h-4 w-4 border-2 border-blue-600 border-t-transparent rounded-full"></div>
                     <span>Memproses...</span>
                   </>
                 ) : (

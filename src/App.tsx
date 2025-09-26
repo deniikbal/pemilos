@@ -10,6 +10,7 @@ import CandidateManagement from './components/admin/CandidateManagement';
 import VoterManagement from './components/admin/VoterManagement';
 import VotingInterface from './components/voter/VotingInterface';
 import PublicResults from './components/public/PublicResults';
+import LandingPage from './components/LandingPage';
 
 // Error Boundary Component
 class ErrorBoundary extends React.Component<
@@ -70,22 +71,37 @@ const AdminLayout: React.FC<{
 
   const getNavClass = (path: string) => {
     return location.pathname === path
-      ? "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg bg-gradient-to-r from-navy-600 to-navy-700 text-white shadow-md transition-all duration-200"
-      : "flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-100 hover:text-gray-900 transition-all duration-200";
+      ? "flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md transition-all duration-200"
+      : "flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-600 rounded-lg hover:bg-blue-50 hover:text-blue-900 transition-all duration-200";
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 font-sans">
       <Header onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} sidebarOpen={sidebarOpen} />
 
       <div className="flex">
         {/* Sidebar */}
         <div className={`
-          fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white shadow-sm border-r border-gray-200 transform transition-transform duration-300 ease-in-out
+          fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white shadow-sm border-r border-blue-200 transform transition-transform duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
           lg:min-h-screen min-h-screen
         `}>
           <div className="p-6 pt-20 lg:pt-6">
+            {/* Sidebar Header */}
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+                  <svg className="h-5 w-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Admin Panel</h3>
+                  <p className="text-xs text-gray-500">Pemilos 2025</p>
+                </div>
+              </div>
+            </div>
+
             <nav className="space-y-2">
               <Link
                 to="/admin"
@@ -118,6 +134,23 @@ const AdminLayout: React.FC<{
                 Voter
               </Link>
             </nav>
+
+            {/* Sidebar Footer */}
+            <div className="absolute bottom-6 left-6 right-6">
+              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+                    <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-xs font-medium text-blue-900">Admin Panel</p>
+                    <p className="text-xs text-blue-600">SMAN 1 Bantarujeg</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -141,7 +174,7 @@ const AdminLayout: React.FC<{
 // Voter Layout Component
 const VoterLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 font-sans">
       <Header />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {children}
@@ -201,6 +234,7 @@ const App: React.FC = () => {
         <AuthProvider>
           <Router>
             <Routes>
+              <Route path="/" element={<LandingPage />} />
               <Route path="/results" element={<PublicResults />} />
               <Route path="/admin/login" element={<AdminLoginForm />} />
               <Route path="/login" element={<LoginForm />} />

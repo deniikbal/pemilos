@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
   CheckCircle,
   X,
@@ -7,9 +7,7 @@ import {
   User,
   Clock,
   Shield,
-  Leaf,
-  Sparkles,
-  TrendingUp
+  Star
 } from 'lucide-react';
 import type { Candidate } from '../types';
 
@@ -66,9 +64,9 @@ const ConfirmVoteModal: React.FC<ConfirmVoteModalProps> = ({
         onClick={handleBackdropClick}
       >
         {/* Modal Container */}
-        <div className="bg-white rounded-xl shadow-xl max-w-sm w-full transform transition-all border border-emerald-200">
+        <div className="bg-white rounded-xl shadow-xl max-w-sm w-full transform transition-all border border-blue-200">
           {/* Modal Header */}
-          <div className="bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 p-4 text-white relative overflow-hidden">
+          <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 p-4 text-white relative overflow-hidden">
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full -ml-12 -mb-12"></div>
@@ -88,7 +86,7 @@ const ConfirmVoteModal: React.FC<ConfirmVoteModalProps> = ({
                 <X className="h-5 w-5" />
               </button>
             </div>
-            <p className="text-emerald-100 text-xs relative z-10">
+            <p className="text-blue-100 text-xs relative z-10">
               Pastikan pilihan Anda sudah tepat
             </p>
           </div>
@@ -126,13 +124,13 @@ const ConfirmVoteModal: React.FC<ConfirmVoteModalProps> = ({
             </div>
 
             {/* Candidate Info */}
-            <div className="bg-gradient-to-r from-emerald-50 to-green-50 border border-emerald-200 rounded-lg p-3">
+            <div className="bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-lg p-3">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 bg-gradient-to-br from-emerald-100 to-green-100 rounded-full flex items-center justify-center">
-                  <User className="h-5 w-5 text-emerald-600" />
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-100 to-purple-100 rounded-full flex items-center justify-center">
+                  <User className="h-5 w-5 text-blue-600" />
                 </div>
                 <div className="flex-1">
-                  <p className="text-xs text-emerald-600 font-medium mb-1">Kandidat Pilihan</p>
+                  <p className="text-xs text-blue-600 font-medium mb-1">Kandidat Pilihan</p>
                   <p className="font-bold text-gray-900 text-base">
                     #{candidateNumber} - {candidate.nama}
                   </p>
@@ -142,19 +140,19 @@ const ConfirmVoteModal: React.FC<ConfirmVoteModalProps> = ({
 
             {/* Voting Process Info */}
             <div className="flex items-center space-x-2 text-xs">
-              <div className="w-6 h-6 bg-emerald-100 rounded-full flex items-center justify-center">
-                <Shield className="h-3 w-3 text-emerald-600" />
+              <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
+                <Shield className="h-3 w-3 text-blue-600" />
               </div>
               <span className="text-gray-700 font-medium">Voting bersifat rahasia</span>
               <span className="text-gray-400">•</span>
-              <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                <Clock className="h-3 w-3 text-green-600" />
+              <div className="w-6 h-6 bg-purple-100 rounded-full flex items-center justify-center">
+                <Clock className="h-3 w-3 text-purple-600" />
               </div>
               <span className="text-gray-700 font-medium">Proses cepat dan aman</span>
             </div>
 
             {/* Final Confirmation */}
-            <div className="text-center bg-gradient-to-r from-emerald-50 to-teal-50 rounded-lg p-3">
+            <div className="text-center bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-3">
               <p className="text-base font-bold text-gray-900 mb-1">
                 Yakin dengan pilihan ini?
               </p>
@@ -165,7 +163,7 @@ const ConfirmVoteModal: React.FC<ConfirmVoteModalProps> = ({
           </div>
 
           {/* Modal Actions */}
-          <div className="border-t border-emerald-100 p-3 bg-gradient-to-r from-emerald-50 to-green-50">
+          <div className="border-t border-blue-100 p-3 bg-gradient-to-r from-blue-50 to-purple-50">
             <div className="flex gap-2">
               <button
                 onClick={onClose}
@@ -178,7 +176,7 @@ const ConfirmVoteModal: React.FC<ConfirmVoteModalProps> = ({
               <button
                 onClick={onConfirm}
                 disabled={isLoading}
-                className="flex-1 flex items-center justify-center space-x-1 bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700 text-white px-3 py-2 rounded-lg text-xs font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 shadow-lg"
+                className="flex-1 flex items-center justify-center space-x-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-3 py-2 rounded-lg text-xs font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 shadow-lg"
               >
                 {isLoading ? (
                   <>
@@ -200,12 +198,12 @@ const ConfirmVoteModal: React.FC<ConfirmVoteModalProps> = ({
       {/* Loading Overlay */}
       {isLoading && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-60 flex items-center justify-center">
-          <div className="bg-white rounded-3xl p-8 shadow-2xl text-center max-w-sm mx-4 border border-emerald-200">
+          <div className="bg-white rounded-3xl p-8 shadow-2xl text-center max-w-sm mx-4 border border-blue-200">
             <div className="relative mb-6">
-              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-emerald-600 mx-auto"></div>
-              <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-green-400 mx absolute top-0 left-0"></div>
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mx-auto"></div>
+              <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-purple-400 mx absolute top-0 left-0"></div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <Leaf className="h-6 w-6 text-emerald-600" />
+                <Star className="h-6 w-6 text-blue-600" />
               </div>
             </div>
             <h3 className="text-xl font-bold text-gray-900 mb-3">
@@ -215,9 +213,9 @@ const ConfirmVoteModal: React.FC<ConfirmVoteModalProps> = ({
               Mohon tunggu sebentar, sistem sedang mencatat suara Anda dengan aman
             </p>
             <div className="mt-4 flex items-center justify-center space-x-1">
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce"></div>
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-              <div className="w-2 h-2 bg-emerald-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce"></div>
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+              <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
             </div>
           </div>
         </div>

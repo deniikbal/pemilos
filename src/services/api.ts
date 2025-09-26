@@ -138,7 +138,14 @@ export const deleteVoter = async (id: string): Promise<void> => {
   if (error) throw error;
 };
 
-export const submitVote = async (voterId: string, candidateId: string): Promise<void> => {
+export interface VoteResult {
+  is_success: boolean;
+  result_message: string;
+  voter_name?: string;
+  new_voted_status?: boolean;
+}
+
+export const submitVote = async (voterId: string, candidateId: string): Promise<VoteResult> => {
   console.log('🗳️ Submitting vote via RPC:', { voterId, candidateId });
 
   // Use RPC function to handle voting with proper transaction and RLS bypass
@@ -163,16 +170,19 @@ export const submitVote = async (voterId: string, candidateId: string): Promise<
   const voteResult = result[0];
   console.log('📊 Vote Result:', voteResult);
 
+  // Return the result object instead of throwing error
+  // This allows the component to handle different scenarios
   if (!voteResult.is_success) {
-    console.error('❌ Vote failed:', voteResult.result_message);
-    throw new Error(voteResult.result_message);
+    console.log('⚠️ Vote not successful:', voteResult.result_message);
+  } else {
+    console.log('✅ Vote submitted successfully!', {
+      voter: voteResult.voter_name,
+      has_voted: voteResult.new_voted_status,
+      message: voteResult.result_message
+    });
   }
 
-  console.log('✅ Vote submitted successfully!', {
-    voter: voteResult.voter_name,
-    has_voted: voteResult.new_voted_status,
-    message: voteResult.result_message
-  });
+  return voteResult;
 };
 
 export const resetVoting = async (): Promise<{ votes_deleted: number; voters_reset: number; message: string }> => {
